@@ -12,20 +12,20 @@ contract('Questionary', function(accounts) {
       meta = instance;     
       return meta.AddQuestion("Question 1",["Answer 11", "Answer 12", "Answer 13"]);
     }).then(function() {
-      return meta.getQuestions();
+      return meta.getQuestionsCount();
     }).then(function(outCount) {
-      countFirst = outCount.length;
-      return meta.getAnswers("Question 1")
+      countFirst = outCount.toNumber();
+      return meta.getAnswersCount("Question 1")
     }).then(function(outAnswers) {
-      countAnswersFirst = outAnswers.length;
+      countAnswersFirst = outAnswers.toNumber();
       return meta.AddQuestion("Question 1",["Answer 11", "Answer 15", "Answer 15"]);
     }).then(function() {
-      return meta.getQuestions();
+      return meta.getQuestionsCount();
     }).then(function(outCount) {
-      countSecond = outCount.length;
-      return meta.getAnswers("Question 1")
+      countSecond = outCount.toNumber();
+      return meta.getAnswersCount("Question 1")
     }).then(function(outAnswers) {
-      countAnswersSecond = outAnswers.length;
+      countAnswersSecond = outAnswers.toNumber();
     }).then(function() {
         assert.equal(countFirst, countSecond, "Question was added twice");
         assert.equal(countAnswersFirst+1, countAnswersSecond, "Answers were added twice");
@@ -41,17 +41,17 @@ contract('Questionary', function(accounts) {
 
     return Questionary.deployed().then(function(instance) {
       meta = instance;     
-      return meta.getAnswers("Question 1")
+      return meta.getAnswersCount("Question 1")
     }).then(function(outAnswers) {
-      countAnswersFirst = outAnswers.length;
+      countAnswersFirst = outAnswers.toNumber();
       return meta.AddQuestion("Question 2",["Answer 11", "Answer 12", "Answer 13"]);
     }).then(function() {
-      return meta.getQuestions();
+      return meta.getQuestionsCount();
     }).then(function(outCount) {
-      countSecond = outCount.length;
-      return meta.getAnswers("Question 2")
+      countSecond = outCount.toNumber();
+      return meta.getAnswersCount("Question 2")
     }).then(function(outAnswers) {
-      countAnswersSecond = outAnswers.length;
+      countAnswersSecond = outAnswers.toNumber();
     }).then(function() {
         assert.equal(countSecond, 2, "Question was not added");
         assert.equal(countAnswersFirst, 4, "Answers were not added");
@@ -82,10 +82,9 @@ contract('Questionary', function(accounts) {
       return meta.votes("Question 2","Answer 13");
     }).then(function(outVotes) {
         votes3 = outVotes.toNumber();
-        assert.equal(votes1, 1, "Vote was not tracked");
-        assert.equal(votes2, 3, "Vote was not tracked");
-        assert.equal(votes3, 2, "Vote was not tracked");
-
+        assert.equal(votes1, 0, "Vote was not tracked");
+        assert.equal(votes2, 2, "Vote was not tracked");
+        assert.equal(votes3, 1, "Vote was not tracked");
     });
   });
 });

@@ -56,13 +56,13 @@ class App extends Component {
     this.state.web3.eth.getAccounts((error, accounts) => {
       this.questionary.deployed().then((instance) => {
         questionaryInstance = instance
-
-        return questionaryInstance.AddQuestion("Question 1", ["Answer 11", "Answer 12", "Answer 13"], {from: accounts[0], gas: 1000000})
+      
+        return questionaryInstance.AddQuestion("Question 1", ["Answer 11", "Answer 12", "Answer 13"], {from: accounts[0], gas: 500000})
       }).then((result) => {
-
-        return questionaryInstance.AddQuestion("Question 2", ["Answer 21", "Answer 22", "Answer 23"], {from: accounts[0], gas: 1000000})
+ 
+        return questionaryInstance.AddQuestion("Question 2", ["Answer 21", "Answer 22", "Answer 23"], {from: accounts[0], gas: 500000})
       }).then((result) => {
-
+ 
         return this.readQuestionary()
       }).then((result) => {
 
@@ -70,32 +70,25 @@ class App extends Component {
     })
   }
 
-  readQuestionary() {
+  readQuestion(question) {
     var questionaryInstance
-    this.state.web3.eth.getAccounts((error, accounts) => {
-      this.questionary.deployed().then((instance) => {
-        questionaryInstance = instance
+    var result
+    this.questionary.deployed().then((instance) => {
+      questionaryInstance = instance
+        
+      return questionaryInstance.getQuestion(question).then((result) => {return this.state.web3.toAscii(result).replace(/\u0000/g, '')})
+    }).then((out) => result = out)
+    return result
+  }
 
-        return questionaryInstance.getQuestions.call();
-      }).then((result) => {
-        for (var i = 0, leni = result.length; i < leni; i++) {          
-          result[i] = this.state.web3.toAscii(result[i]).replace(/\u0000/g, '') 
-         /*  var answers = questionaryInstance.getAnswers.call(result[i]).then((result) => {
-            for (var j = 0, lenj = result.length; j < lenj; j++) {
-              result[j] = this.state.web3.toAscii(result[j]).replace(/\u0000/g, '')
-            }
-            return result
-          })
-          console.log(answers.then((tmp) => {return JSON.stringify(tmp)}))
-          console.log(JSON.stringify(result[i],answers)) */
-        }
-        return result
-      }).then((result) => {
+  readQuestionary() {
 
-        return this.setState({ questions: result })
-      }).then((result) => {
+    console.log(this.readQuestion(0x0))
+    this.readQuestion(0x0).then((result) => {
+        console.log(result)
+        return this.setState({ questions: result.toString() })
+    }).then((result) => {
 
-      })
     })
   }
 
